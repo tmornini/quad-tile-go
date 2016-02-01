@@ -11,7 +11,7 @@ type QuadTile struct {
 
 func New(position *position.Position) *QuadTile {
 	return &QuadTile{
-		IdFor(position),
+		IdFor(position, 16),
 		position.Latitude,
 		position.Longitude,
 		position.Altitude}

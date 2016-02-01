@@ -2,77 +2,57 @@ package quadTile
 
 import "github.com/tmornini/quad-tile-go/position"
 
-func IdFor(position *position.Position) string {
-	level := NewLevel()
-
-	level.Position = position
-
-	return recurse(level)
-}
-
-func recurse(level *Level) string {
-	this_level(level)
-
-	if level.is_finished() {
-		return level.Id
-	}
-
-	next_level(level)
-
-	return recurse(level)
-}
-
-func this_level(level *Level) {
-	level.Last = level.A
-	level.Middle = between(level.Last, level.D)
-
-	update_if_a(level)
-	update_if_b(level)
-	update_if_c(level)
-	update_if_d(level)
-}
-
-func next_level(level *Level) {
-	level.Current += 1
-
-	level.A = between(level.Last, level.A)
-	level.B = between(level.Last, level.B)
-	level.C = between(level.Last, level.C)
-	level.D = between(level.Last, level.D)
-}
-
-func between(a *position.Position, b *position.Position) *position.Position {
-	return position.New(
-		(a.Latitude+b.Latitude)/2,
-		(a.Longitude+b.Longitude)/2,
-		(a.Altitude+b.Altitude)/2,
+func IdFor(
+	poi *position.Position,
+	desired_level uint,
+) string {
+	return recurse(
+		"",
+		poi,
+		position.New(0.0, 0.0, 0.0),
+		desired_level,
+		1,
+		45,
+		90,
 	)
 }
 
-func update_if_a(level *Level) {
-	if level.Position.Latitude >= level.Middle.Latitude && level.Position.Longitude < level.Middle.Longitude {
-		level.Id += "a"
-		level.Last = level.A
+func recurse(
+	id string,
+	poi *position.Position,
+	center *position.Position,
+	desired_level uint,
+	current_level uint,
+	latitude_adjustment float64,
+	longitude_adjustment float64,
+) string {
+	if poi.Latitude >= center.Latitude && poi.Longitude < center.Longitude {
+		id += "a"
+		center = position.New(center.Latitude+latitude_adjustment, center.Longitude-longitude_adjustment, 0)
+	} else if poi.Latitude >= center.Latitude && poi.Longitude >= center.Longitude {
+		id += "b"
+		center = position.New(center.Latitude+latitude_adjustment, center.Longitude+longitude_adjustment, 0)
+	} else if poi.Latitude < center.Latitude && poi.Longitude < center.Longitude {
+		id += "c"
+		center = position.New(center.Latitude-latitude_adjustment, center.Longitude-longitude_adjustment, 0)
+	} else if poi.Latitude < center.Latitude && poi.Longitude >= center.Longitude {
+		id += "d"
+		center = position.New(center.Latitude-latitude_adjustment, center.Longitude+longitude_adjustment, 0)
+	} else {
+		panic("this should never happen")
 	}
-}
 
-func update_if_b(level *Level) {
-	if level.Position.Latitude >= level.Middle.Latitude && level.Position.Longitude >= level.Middle.Longitude {
-		level.Id += "b"
-		level.Last = level.B
-	}
-}
-
-func update_if_c(level *Level) {
-	if level.Position.Latitude < level.Middle.Latitude && level.Position.Longitude < level.Middle.Longitude {
-		level.Id += "c"
-		level.Last = level.C
-	}
-}
-
-func update_if_d(level *Level) {
-	if level.Position.Latitude < level.Middle.Latitude && level.Position.Longitude >= level.Middle.Longitude {
-		level.Id += "d"
-		level.Last = level.D
+	if current_level == desired_level {
+		return id
+	} else {
+		return recurse(
+			id,
+			poi,
+			center,
+			desired_level,
+			current_level+1,
+			latitude_adjustment/2,
+			longitude_adjustment/2,
+		)
 	}
 }
