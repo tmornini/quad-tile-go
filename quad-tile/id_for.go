@@ -3,13 +3,15 @@ package quadTile
 import "github.com/tmornini/quad-tile-go/position"
 
 func IdFor(
-	poi *position.Position,
+	poi           *position.Position,
 	desired_level uint,
 ) string {
 	return recurse(
 		"",
-		poi,
-		position.New(0.0, 0.0, 0.0),
+		poi.Latitude,
+		poi.Longitude,
+		0,
+		0,
 		desired_level,
 		1,
 		45,
@@ -18,37 +20,43 @@ func IdFor(
 }
 
 func recurse(
-	id string,
-	poi *position.Position,
-	center *position.Position,
-	desired_level uint,
-	current_level uint,
-	latitude_adjustment float64,
+	id                   string,
+	latitude             float64,
+	longitude            float64,
+	center_latitude      float64,
+	center_longitude     float64,
+	desired_level        uint,
+	current_level        uint,
+	latitude_adjustment  float64,
 	longitude_adjustment float64,
 ) string {
-	if poi.Latitude >= center.Latitude && poi.Longitude < center.Longitude {
-		id += "a"
-		center = position.New(center.Latitude+latitude_adjustment, center.Longitude-longitude_adjustment, 0)
-	} else if poi.Latitude >= center.Latitude && poi.Longitude >= center.Longitude {
-		id += "b"
-		center = position.New(center.Latitude+latitude_adjustment, center.Longitude+longitude_adjustment, 0)
-	} else if poi.Latitude < center.Latitude && poi.Longitude < center.Longitude {
-		id += "c"
-		center = position.New(center.Latitude-latitude_adjustment, center.Longitude-longitude_adjustment, 0)
-	} else if poi.Latitude < center.Latitude && poi.Longitude >= center.Longitude {
-		id += "d"
-		center = position.New(center.Latitude-latitude_adjustment, center.Longitude+longitude_adjustment, 0)
-	} else {
-		panic("this should never happen")
+	quadrant := 97
+
+	if longitude < center_longitude { // west
+		center_longitude -= longitude_adjustment
+	} else {                          // east
+		quadrant += 1
+		center_longitude += longitude_adjustment
 	}
+
+	if latitude >= center_latitude {  // north
+		center_latitude += latitude_adjustment
+	} else {                          // south
+		quadrant += 2
+		center_latitude -= latitude_adjustment
+	}
+
+	id += string(quadrant)
 
 	if current_level == desired_level {
 		return id
 	} else {
 		return recurse(
 			id,
-			poi,
-			center,
+			latitude,
+			longitude,
+			center_latitude,
+			center_longitude,
 			desired_level,
 			current_level+1,
 			latitude_adjustment/2,
