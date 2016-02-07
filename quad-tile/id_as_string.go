@@ -6,7 +6,7 @@ func (self *QuadTile) IdAsString(level uint) string {
   if level < 1 {
     panic(fmt.Sprintf("level %v (< 1)", level))
   } else if level > self.Level {
-    panic(fmt.Sprintf("level (%v) than QuadTile (%v)", level, self.Id))
+    panic(fmt.Sprintf("level (%v) greater than QuadTile (%v)", level, self.Level))
   }
 
   id := self.Id
