@@ -7,7 +7,7 @@ const iterations = 7500000
 
 // func main() {
 // 	for i := 0; i < iterations; i++ {
-// 		quadTile.New(position.Random())
+// 		quadTile.New(position.Random(), 16)
 // 	}
 // }
 
@@ -17,7 +17,7 @@ const workers = 8
 
 func start_worker(channel quadTileChannel, count int) {
 	for i := 0; i < count; i++ {
-		channel <- quadTile.New(position.Random())
+		channel <- quadTile.New(position.Random(), 16)
 	}
 }
 
