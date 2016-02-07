@@ -7,6 +7,9 @@ These two Go packages implement the QuadTile hierarchichal binning algorithm des
     • returns an error if co-ordinates are out of bounds
 
 * github.com/tmornini/quad-tile-go/quad-tile
-  * created with a position and level (1-16) and returns a quadTile
+  * method New(*position Position.position, level uint)
+    • returns a *quadTile
   * method IdAsString(level) string
-    • returns string form of ID
+    • returns Id as a string
+  * method IdAsUint32(level) uint32
+    • returns Id as a uint32

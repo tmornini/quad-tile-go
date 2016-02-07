@@ -1,26 +1,34 @@
 package quadTile
 
+import "fmt"
+
 import "github.com/tmornini/quad-tile-go/position"
 
 type QuadTile struct {
-	Id uint
+	Id uint64
   Level uint
 	Position *position.Position
 }
 
-func New(pos *position.Position, desired_level uint) *QuadTile {
+func New(pos *position.Position, level uint) *QuadTile {
 
-  var id uint
+  if level < 1 {
+    panic(fmt.Sprintf("cannot handle desired level %v (< 1)", level))
+  } else if level > 32 {
+    panic(fmt.Sprintf("cannot handle desired level %v (> 32)", level))
+  }
+
+  var id uint64
   var latitude = pos.Latitude
   var longitude = pos.Longitude
   var center_latitude float64
   var center_longitude float64
-  var level uint = 0
+  var current_level uint = 0
   var latitude_adjustment float64 = 45
   var longitude_adjustment float64 = 90
 
-  for level < desired_level {
-    var quadrant uint
+  for current_level < level {
+    var quadrant uint64
 
     if longitude < center_longitude { // west
       center_longitude -= longitude_adjustment
@@ -36,12 +44,12 @@ func New(pos *position.Position, desired_level uint) *QuadTile {
       center_latitude -= latitude_adjustment
     }
 
-    id += quadrant << (level * 2)
+    id += quadrant << ((31 - current_level) * 2)
 
     latitude_adjustment /= 2
     longitude_adjustment /= 2
 
-    level++
+    current_level++
   }
 
 	return &QuadTile{

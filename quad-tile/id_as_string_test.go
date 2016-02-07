@@ -47,6 +47,26 @@ func TestIdAsString(t *testing.T) {
   }
 }
 
+func TestIdAsStringPanicOnLowLevel(t *testing.T) {
+  defer func() { recover() }()
+
+  pos, _ := position.New(0, 0, 0)
+
+  New(pos, 16).IdAsUint32(0)
+
+  t.Error("expected panic on level < 1")
+}
+
+func TestIdAsStringPanicOnHigherThanQuadTileLevel(t *testing.T) {
+  defer func() { recover() }()
+
+  pos, _ := position.New(0, 0, 0)
+
+  New(pos, 8).IdAsUint32(9)
+
+  t.Error("expected panic on level > QuadTile.level")
+}
+
 func BenchmarkIdAsString(b *testing.B) {
   for n := 0; n < b.N; n++ {
     New(position.Random(), 16).IdAsString(16)
