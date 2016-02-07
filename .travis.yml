@@ -1,0 +1,4 @@
+language: go
+go:
+  - 1.6rc2
+script: go test -v ./... -bench=.
