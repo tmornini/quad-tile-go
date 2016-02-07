@@ -3,13 +3,13 @@ package position
 import "math/rand"
 
 func Random() *Position {
-	return New(
-		RandomData(),
-	)
+	pos, _ := New(RandomData())
+
+	return pos
 }
 
 func RandomData() (float64, float64, float64) {
-	return rand.Float64()*180.0 - 90.0,
-		rand.Float64()*360.0 - 180.0,
-		rand.Float64()*100000.0 - 1000.0
+	return rand.Float64()*180 - 90,
+		rand.Float64()*359.999999999 - 180,
+		rand.Float64()*100000 - 1000
 }

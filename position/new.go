@@ -8,10 +8,16 @@ type Position struct {
 	Altitude  float64
 }
 
-func New(latitude float64, longitude float64, altitude float64) *Position {
+func New(latitude float64, longitude float64, altitude float64) (*Position, error) {
 	if latitude < -90 || latitude > 90 || longitude <= -180 || longitude > 180 {
-		panic(fmt.Sprintf("latitude: %f, longitude: %f, altitude: %f is out of range!", latitude, longitude, altitude))
+		return nil,
+			fmt.Errorf(
+				"latitude: %f, longitude: %f, altitude: %f is out of range!",
+				latitude,
+				longitude,
+				altitude,
+			)
 	}
 
-	return &Position{latitude, longitude, altitude}
+	return &Position{latitude, longitude, altitude}, nil
 }
