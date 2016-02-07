@@ -8,31 +8,47 @@ import "github.com/tmornini/quad-tile-go/position"
 func TestIdAsString(t *testing.T) {
   pos, _ := position.New(0, -0.000000001, 0)
 
-  if qt := New(pos, 16); qt.IdAsString() != "addddddddddddddd" {
-    t.Error(fmt.Sprintf("expected: addddddddddddddd, got: %#v\n", qt.IdAsString()))
+  if qt := New(pos, 16); qt.IdAsString(2) != "ad" {
+    t.Error(fmt.Sprintf("expected: ad, got: %#v\n", qt.IdAsString(2)))
+  }
+
+  if qt := New(pos, 16); qt.IdAsString(16) != "addddddddddddddd" {
+    t.Error(fmt.Sprintf("expected: addddddddddddddd, got: %#v\n", qt.IdAsString(16)))
   }
 
   pos, _ = position.New(0, 0, 0)
 
-  if qt := New(pos, 16); qt.IdAsString() != "bccccccccccccccc" {
-    t.Error(fmt.Sprintf("expected: bccccccccccccccc, got: %#v\n", qt.IdAsString()))
+  if qt := New(pos, 16); qt.IdAsString(2) != "bc" {
+    t.Error(fmt.Sprintf("expected: bc, got: %#v\n", qt.IdAsString(2)))
+  }
+
+  if qt := New(pos, 16); qt.IdAsString(16) != "bccccccccccccccc" {
+    t.Error(fmt.Sprintf("expected: bccccccccccccccc, got: %#v\n", qt.IdAsString(16)))
   }
 
   pos, _ = position.New(-0.000000001, -0.000000001, 0)
 
-  if qt := New(pos, 16); qt.IdAsString() != "cbbbbbbbbbbbbbbb" {
-    t.Error(fmt.Sprintf("expected: cbbbbbbbbbbbbbbb, got: %#v\n", qt.IdAsString()))
+  if qt := New(pos, 16); qt.IdAsString(2) != "cb" {
+    t.Error(fmt.Sprintf("expected: cb, got: %#v\n", qt.IdAsString(2)))
+  }
+
+  if qt := New(pos, 16); qt.IdAsString(16) != "cbbbbbbbbbbbbbbb" {
+    t.Error(fmt.Sprintf("expected: cbbbbbbbbbbbbbbb, got: %#v\n", qt.IdAsString(16)))
   }
 
   pos, _ = position.New(-0.000000001, 0, 0)
 
-  if qt := New(pos, 16); qt.IdAsString() != "daaaaaaaaaaaaaaa" {
-    t.Error(fmt.Sprintf("expected: daaaaaaaaaaaaaaa, got: %#v\n", qt.IdAsString()))
+  if qt := New(pos, 16); qt.IdAsString(2) != "da" {
+    t.Error(fmt.Sprintf("expected: da, got: %#v\n", qt.IdAsString(2)))
+  }
+
+  if qt := New(pos, 16); qt.IdAsString(16) != "daaaaaaaaaaaaaaa" {
+    t.Error(fmt.Sprintf("expected: daaaaaaaaaaaaaaa, got: %#v\n", qt.IdAsString(16)))
   }
 }
 
 func BenchmarkIdAsString(b *testing.B) {
   for n := 0; n < b.N; n++ {
-    New(position.Random(), 16).IdAsString()
+    New(position.Random(), 16).IdAsString(16)
   }
 }
