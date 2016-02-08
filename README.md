@@ -4,12 +4,12 @@ These two Go packages implement the QuadTile hierarchichal binning algorithm des
 
 * github.com/tmornini/quad-tile-go/position
   * New(latitude, longitude, altitude float64) (position, error)
-    • returns an error if co-ordinates are out of bounds
+    * returns an error if co-ordinates are out of bounds
 
 * github.com/tmornini/quad-tile-go/quad-tile
   * method New(*position Position.position, level uint)
-    • returns a *quadTile
+    * returns a *quadTile
   * method IdAsString(level) string
-    • returns Id as a string
+    * returns Id as a string
   * method IdAsUint32(level) uint32
-    • returns Id as a uint32
+    * returns Id as a uint32
